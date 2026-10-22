@@ -1,0 +1,22 @@
+import type { Issue, Department } from './types';
+
+export const departments: Department[] = ['Electrical','Civil and Roads','Plumbing and Water','Sanitation and Housekeeping','Mess and Food','Hostel and Warden','IT and Network','Other'];
+const ago = (hours: number) => new Date(Date.now() - hours * 3600000).toISOString();
+export const seedIssues: Issue[] = [
+  { id:'MNT-2610220912-A4F1', title:'Water leakage near Hostel 3 entrance', description:'Water is continuously leaking near the entrance of Hostel 3 and the pathway is getting slippery.', category:'Plumbing and Water', location:'Hostel 3 · Main entrance', priority:'Critical', score:91, safety:95, severity:90, impact:85, waiting:75, related:90, confidence:.94, status:'Assigned', createdAt:ago(17), assignedTo:'R. Sharma', department:'Plumbing and Water', updates:[{at:ago(17),status:'Submitted',note:'Report submitted by a student.'},{at:ago(16),status:'Read/Verified',note:'Issue verified by campus administration.'},{at:ago(15),status:'Assigned',note:'Assigned to Plumbing and Water.'}], createdBy:'Student 1042', slaHours:8 },
+  { id:'MNT-2610221028-B7D2', title:'Streetlight not working', description:'The streetlight along the road between the library and Hostel 1 is not working after dark.', category:'Electrical', location:'Library road · Pole E-12', priority:'High', score:78, safety:82, severity:72, impact:70, waiting:55, related:75, confidence:.89, status:'In Progress', createdAt:ago(29), assignedTo:'A. Khan', department:'Electrical', updates:[{at:ago(29),status:'Submitted',note:'Report submitted.'},{at:ago(28),status:'Assigned',note:'Electrical team assigned.'},{at:ago(12),status:'In Progress',note:'Team is inspecting the fixture.'}], createdBy:'Student 2207', slaHours:24 },
+  { id:'MNT-2610211635-C9E3', title:'Unstable internet connection', description:'Wi-Fi keeps disconnecting in the second-floor study area.', category:'IT and Network', location:'Central Library · Floor 2', priority:'Medium', score:54, safety:15, severity:50, impact:65, waiting:60, related:40, confidence:.87, status:'Read/Verified', createdAt:ago(42), assignedTo:'Unassigned', department:'IT and Network', updates:[{at:ago(42),status:'Submitted',note:'Report submitted.'},{at:ago(40),status:'Read/Verified',note:'Report verified.'}], createdBy:'Student 1178', slaHours:48 },
+  { id:'MNT-2610211140-D3A8', title:'Overflowing waste bin', description:'Waste bin near the academic block canteen is overflowing.', category:'Sanitation and Housekeeping', location:'Academic Block · Canteen', priority:'Medium', score:48, safety:35, severity:42, impact:55, waiting:45, related:35, confidence:.91, status:'Resolved', createdAt:ago(52), assignedTo:'P. Verma', department:'Sanitation and Housekeeping', updates:[{at:ago(52),status:'Submitted',note:'Report submitted.'},{at:ago(49),status:'Assigned',note:'Housekeeping assigned.'},{at:ago(24),status:'Resolved',note:'Waste cleared and area cleaned.'}], createdBy:'Student 0913', slaHours:48 },
+  { id:'MNT-2610201731-E5C6', title:'Damaged pathway tile', description:'A broken tile on the pathway near the main academic building may cause someone to trip.', category:'Civil and Roads', location:'Academic Block · East pathway', priority:'High', score:72, safety:76, severity:68, impact:66, waiting:62, related:50, confidence:.83, status:'Submitted', createdAt:ago(64), assignedTo:'Unassigned', department:'Civil and Roads', updates:[{at:ago(64),status:'Submitted',note:'Report submitted.'}], createdBy:'Student 1821', slaHours:24 },
+  { id:'MNT-2610201250-F6A9', title:'Mess wash area needs cleaning', description:'The wash area at the hostel mess needs additional cleaning.', category:'Mess and Food', location:'Hostel 2 · Mess', priority:'Low', score:31, safety:20, severity:28, impact:35, waiting:40, related:25, confidence:.88, status:'Assigned', createdAt:ago(72), assignedTo:'S. Yadav', department:'Mess and Food', updates:[{at:ago(72),status:'Submitted',note:'Report submitted.'},{at:ago(70),status:'Assigned',note:'Mess operations notified.'}], createdBy:'Student 3021', slaHours:72 }
+];
+export const staffByDepartment: Record<string,string[]> = {
+  'Electrical':['A. Khan','M. Patel','S. Tiwari'],
+  'Civil and Roads':['N. Joshi','V. Singh'],
+  'Plumbing and Water':['R. Sharma','D. Meena','K. Das'],
+  'Sanitation and Housekeeping':['P. Verma','J. Khan'],
+  'Mess and Food':['S. Yadav','M. Ali'],
+  'Hostel and Warden':['Warden Desk','A. Mishra'],
+  'IT and Network':['IT Helpdesk','R. Nair'],
+  'Other':['Campus Helpdesk']
+};
