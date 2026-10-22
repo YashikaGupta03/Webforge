@@ -59,7 +59,7 @@ In Vite development mode, the sign-in page and authenticated top-right dashboard
 - `GET /api/notifications`, `PATCH /api/notifications/{id}`
 - `GET /api/audit`, `GET /api/analytics/summary`
 
-All complaint and administration routes require a bearer token. Students see only their own complaints; wardens are limited to their configured hostel; department staff see assigned work. Seed a Department Staff account for each assignment target before assigning work.
+All complaint and administration routes require a bearer token. Students see only their own complaints; wardens are limited to their configured hostel; department staff see assigned work. Seed a Department Staff account for each assignment target before assigning work.yes 
 
 ## Tests
 
