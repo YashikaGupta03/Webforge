@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     app_environment: str = "development"
     secret_key: str = ""
     access_token_minutes: int = 60 * 8
-    bootstrap_admin_email: str = ""
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    bootstrap_admin_email: str = "yashikagupta2370@gmail.com"
+    cors_origins: str = "http://localhost:5173,https://webforge-sable.vercel.app/login,http://127.0.0.1:5173"
 
 
 settings = Settings()
