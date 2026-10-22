@@ -2,7 +2,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Activity, Bell, Building2, ChartNoAxesCombined, ClipboardList, LayoutDashboard, LogOut, Map, Menu, Settings, ShieldCheck, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAppStore } from '../store';
-import type { Role } from '../types';
 
 const links = [
   {to:'/admin/dashboard',label:'Overview',icon:LayoutDashboard},
@@ -15,7 +14,8 @@ const links = [
 ];
 export default function Layout({children,title,subtitle}:{children:React.ReactNode;title:string;subtitle?:string}) {
   const [mobileOpen,setMobileOpen]=useState(false);
-  const role=useAppStore(s=>s.role); const setRole=useAppStore(s=>s.setRole); const notices=useAppStore(s=>s.notices);
+  const role=useAppStore(s=>s.role); const notices=useAppStore(s=>s.notices); const logout=useAppStore(s=>s.logout);
+  const apiError=useAppStore(s=>s.apiError); const issuesLoading=useAppStore(s=>s.issuesLoading); const issuesLoadFailed=useAppStore(s=>s.issuesLoadFailed); const loadIssues=useAppStore(s=>s.loadIssues); const clearApiError=useAppStore(s=>s.clearApiError);
   const navigate=useNavigate();
   const student=role==='Student';
   const navLinks=student?[{to:'/student/dashboard',label:'My dashboard',icon:LayoutDashboard},{to:'/student/report',label:'Report an issue',icon:ClipboardList},{to:'/student/issues',label:'My reports',icon:Activity},{to:'/admin/campus-map',label:'Explore campus',icon:Map},{to:'/settings',label:'Settings',icon:Settings}]:links;
@@ -28,8 +28,8 @@ export default function Layout({children,title,subtitle}:{children:React.ReactNo
     </aside>
     {mobileOpen&&<div className="scrim" onClick={()=>setMobileOpen(false)} />}
     <main className="main-area">
-      <header className="topbar"><button className="icon-button mobile-menu" onClick={()=>setMobileOpen(true)}><Menu size={19}/></button><div className="breadcrumb">CampusAlly <span>/</span> MANIT Bhopal</div><div className="top-actions"><span className="demo-pill">DEMO MODE</span><button className="icon-button" title="Notifications" onClick={()=>navigate('/settings')}><Bell size={18}/>{notices.some(n=>!n.read)&&<i/>}</button><div className="avatar">{role==='Student'?'ST':role==='Administrator'?'AD':role==='Warden'?'WD':role==='Super Admin'?'SA':'DS'}</div><select className="role-select" value={role} onChange={e=>{setRole(e.target.value as Role);navigate(e.target.value==='Student'?'/student/dashboard':'/admin/dashboard')}} aria-label="Switch demo role">{(['Student','Warden','Administrator','Department Staff','Super Admin'] as Role[]).map(r=><option key={r}>{r}</option>)}</select></div></header>
-      <section className="page-content"><div className="page-heading"><div><div className="eyebrow"><span className="live-dot"/>{student?'STUDENT PORTAL':'CAMPUS INTELLIGENCE SYSTEM'}</div><h1>{title}</h1>{subtitle&&<p>{subtitle}</p>}</div>{student&&<button className="primary-button" onClick={()=>navigate('/student/report')}>＋ Report issue</button>}</div>{children}</section>
+      <header className="topbar"><button className="icon-button mobile-menu" onClick={()=>setMobileOpen(true)}><Menu size={19}/></button><div className="breadcrumb">CampusAlly <span>/</span> MANIT Bhopal</div><div className="top-actions"><button className="icon-button" title="Notifications" onClick={()=>navigate('/settings')}><Bell size={18}/>{notices.some(n=>!n.read)&&<i/>}</button><div className="avatar">{role==='Student'?'ST':role==='Administrator'?'AD':role==='Warden'?'WD':role==='Super Admin'?'SA':'DS'}</div><span className="role-select">{role}</span><button className="icon-button" title="Sign out" aria-label="Sign out" onClick={()=>{logout();navigate('/login',{replace:true})}}><LogOut size={17}/></button></div></header>
+      <section className="page-content"><div className="page-heading"><div><div className="eyebrow"><span className="live-dot"/>{student?'STUDENT PORTAL':'CAMPUS INTELLIGENCE SYSTEM'}</div><h1>{title}</h1>{subtitle&&<p>{subtitle}</p>}</div>{student&&<button className="primary-button" onClick={()=>navigate('/student/report')}>＋ Report issue</button>}</div>{issuesLoading&&<div className="api-loading muted" role="status">Loading complaints from the server…</div>}{apiError&&<div className="api-error panel" role="alert"><span>{apiError}</span>{issuesLoadFailed?<button className="secondary-button" onClick={()=>void loadIssues()}>Retry loading</button>:<button className="secondary-button" onClick={clearApiError}>Dismiss</button>}</div>}{children}</section>
     </main>
   </div>;
 }
