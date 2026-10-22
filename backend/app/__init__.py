@@ -1,0 +1,1 @@
+"""CampusAlly backend application package."""
