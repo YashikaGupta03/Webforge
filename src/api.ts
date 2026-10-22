@@ -39,6 +39,13 @@ export interface AuthResponse {
   name: string;
 }
 
+export interface StudentSignupInput {
+  email: string;
+  scholar_no: string;
+  name: string;
+  password: string;
+}
+
 export interface DepartmentRecord {
   id: number;
   name: string;
@@ -139,7 +146,14 @@ export async function createIssue(input: IssueInput): Promise<Issue> {
 export async function login(scholarNo: string, password: string): Promise<AuthResponse> {
   return request<AuthResponse>('/auth/login', {
     method: 'POST',
-    body: JSON.stringify({ scholar_no: scholarNo, password })
+    body: JSON.stringify({ scholar_no: scholarNo, password :  password })
+  });
+}
+
+export async function signupStudent(input: StudentSignupInput): Promise<void> {
+  await request<{ id: string }>('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(input)
   });
 }
 

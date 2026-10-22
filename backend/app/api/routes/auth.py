@@ -15,7 +15,7 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.db.session import get_db
 from app.models.department import Department, Hostel
 from app.models.user import User
-from app.schemas.auth import DemoLoginRequest, LoginRequest, TokenResponse, UserCreate
+from app.schemas.auth import DemoLoginRequest, LoginRequest, SignupRequest, TokenResponse, UserCreate
 from app.schemas.user import UserResponse
 
 router = APIRouter()
@@ -42,6 +42,26 @@ def login(
     if account is None or not account.is_active or not verify_password(data.password, account.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid account or password.")
     return TokenResponse(access_token=create_access_token(account.id), role=account.role, name=account.name)
+
+
+@router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+def signup(data: SignupRequest, db: Session = Depends(get_db)) -> User:
+    user = User(
+        id=str(uuid4()),
+        email=str(data.email).strip().casefold(),
+        scholar_no=data.scholar_no,
+        name=data.name,
+        role="Student",
+        password_hash=hash_password(data.password),
+    )
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Email or scholar number is already registered.") from error
+    db.refresh(user)
+    return user
 
 
 @router.post("/demo-login", response_model=TokenResponse)

@@ -2,12 +2,27 @@ from __future__ import annotations
 
 from typing import Literal, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
 class LoginRequest(BaseModel):
     scholar_no: str = Field(min_length=3, max_length=40)
     password: str = Field(min_length=1, max_length=128)
+
+
+class SignupRequest(BaseModel):
+    email: EmailStr
+    scholar_no: str = Field(min_length=3, max_length=40)
+    name: str = Field(min_length=1, max_length=160)
+    password: str = Field(min_length=12, max_length=128)
+
+    @field_validator("scholar_no", "name")
+    @classmethod
+    def strip_required_text(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("This field cannot be blank.")
+        return value
 
 
 class DemoLoginRequest(BaseModel):

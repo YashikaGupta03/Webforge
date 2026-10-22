@@ -36,7 +36,9 @@ alembic upgrade head
 python -m app.cli create-user --role "Super Admin"
 ```
 
-The migration inserts departments and twelve clearly marked placeholder hostel records; replace those with verified MANIT data before production. Provision further accounts through the admin-only `POST /api/auth/users` endpoint or the CLI. There is no public registration endpoint.
+The migration inserts departments and twelve clearly marked placeholder hostel records; replace those with verified MANIT data before production. Staff and administrator accounts must be provisioned through the admin-only `POST /api/auth/users` endpoint or the CLI.
+
+Students can create an account at `/signup` with their name, institute email, scholar number, and a password of at least 12 characters. Sign-up stores a password hash in the configured database, assigns the `Student` role, and directs the student to sign in. Email addresses and scholar numbers must be unique.
 
 ## Run the development server
 

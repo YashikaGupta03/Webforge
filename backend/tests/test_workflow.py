@@ -131,6 +131,47 @@ def test_login_requires_scholar_number_and_valid_password(client: TestClient) ->
     assert email_login.status_code == 401
 
 
+def test_student_signup_saves_account_that_can_sign_in(client: TestClient) -> None:
+    signup = client.post(
+        "/api/auth/signup",
+        json={
+            "email": "New.Student@example.com",
+            "scholar_no": " NEW-STUDENT-1 ",
+            "name": " New Student ",
+            "password": "Long-Student-Password",
+        },
+    )
+    assert signup.status_code == 201
+    assert signup.json()["email"] == "new.student@example.com"
+    assert signup.json()["scholar_no"] == "NEW-STUDENT-1"
+    assert signup.json()["name"] == "New Student"
+    assert signup.json()["role"] == "Student"
+    assert "password_hash" not in signup.json()
+
+    login = client.post(
+        "/api/auth/login",
+        json={"scholar_no": "NEW-STUDENT-1", "password": "Long-Student-Password"},
+    )
+    assert login.status_code == 200
+    assert login.json()["role"] == "Student"
+
+
+def test_student_signup_rejects_duplicate_accounts_and_short_passwords(client: TestClient) -> None:
+    account = {
+        "email": "new.student@example.com",
+        "scholar_no": "NEW-STUDENT-1",
+        "name": "New Student",
+        "password": "Long-Student-Password",
+    }
+    assert client.post("/api/auth/signup", json=account).status_code == 201
+    assert client.post("/api/auth/signup", json=account).status_code == 409
+
+    account["email"] = "another.student@example.com"
+    account["scholar_no"] = "NEW-STUDENT-2"
+    account["password"] = "short"
+    assert client.post("/api/auth/signup", json=account).status_code == 422
+
+
 @pytest.mark.parametrize("role", DEMO_ROLES)
 def test_demo_login_issues_selected_local_role(client: TestClient, role: str) -> None:
     response = client.post("/api/auth/demo-login", json={"role": role})
