@@ -7,4 +7,4 @@ Automated triage, spatial clustering & explainable prioritization for urban comp
 
 Develop an intelligent civic issue management platform that analyzes incoming complaints, identifies related incidents, estimates their urgency, and recommends appropriate actions. The system should help administrators detect recurring problem areas, allocate resources efficiently, and track resolution across the entire complaint lifecycle.
 
-CivicSense turns a noisy stream of MANIT complaints into a ranked, explainable, location-aware action queue, so the most critical problems get fixed first and recurring problem areas get fixed for good.
+CivicSense turns a noisy stream of MANIT complaints into a ranked, explainable, location-aware action queue, so the most critical problems get fixed first and recurring problem areas get fixed for good. hi 
