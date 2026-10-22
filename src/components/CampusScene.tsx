@@ -17,8 +17,7 @@ const locations:Record<string,[number,number,number]> = {
   'Central Library · Floor 2':[1.7,1,-1.6],
   'Academic Block · Canteen':[-2,.7,-1],
   'Academic Block · East pathway':[-.8,.1,-.4],
-  'Hostel 2 · Mess':[-1.9,.7,2.6],
-  'Academic Block · East pathway':[-.8,.1,-.4]
+  'Hostel 2 · Mess':[-1.9,.7,2.6]
 };
 function Building({b}:{b:typeof buildings[number]}) {
   return <group position={b.position}>

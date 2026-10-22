@@ -1,4 +1,4 @@
-import type { Department, Issue, Notice } from './types';
+import type { Department, Issue, Notice, Role } from './types';
 
 const departments: Department[] = [
   'Electrical',
@@ -143,8 +143,11 @@ export async function login(scholarNo: string, password: string): Promise<AuthRe
   });
 }
 
-export async function loginDemo(): Promise<AuthResponse> {
-  return request<AuthResponse>('/auth/demo-login', { method: 'POST' });
+export async function loginDemo(role: Role): Promise<AuthResponse> {
+  return request<AuthResponse>('/auth/demo-login', {
+    method: 'POST',
+    body: JSON.stringify({ role })
+  });
 }
 
 export async function updateIssueStatus(

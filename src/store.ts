@@ -43,7 +43,7 @@ interface AppState {
   loadAudit: () => Promise<void>;
   clearApiError: () => void;
   login: (scholarNo: string, password: string) => Promise<Role>;
-  loginDemo: () => Promise<Role>;
+  loginDemo: (role: Role) => Promise<Role>;
   logout: () => void;
   addIssue: (input: IssueInput) => Promise<Issue>;
   updateStatus: (id: string, status: IssueStatus, note: string) => Promise<void>;
@@ -54,7 +54,6 @@ interface AppState {
 }
 
 let issueLoad: Promise<void> | undefined;
-let demoLogin: Promise<Role> | undefined;
 
 function updateIssue(issues: Issue[], updated: Issue): Issue[] {
   return [updated, ...issues.filter(issue => issue.id !== updated.id)];
@@ -115,22 +114,15 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ role: result.role as Role, isAuthenticated: true, apiError: null });
     return result.role as Role;
   },
-  loginDemo: () => {
-    if (demoLogin) return demoLogin;
-    demoLogin = loginDemoRequest()
-      .then(result => {
-        if (result.role !== 'Student') {
-          throw new Error('The local demo endpoint returned an unexpected account role.');
-        }
-        setAccessToken(result.access_token);
-        persist('ca-role', result.role);
-        set({ role: 'Student', isAuthenticated: true, apiError: null });
-        return 'Student';
-      })
-      .finally(() => {
-        demoLogin = undefined;
-      });
-    return demoLogin;
+  loginDemo: async role => {
+    const result = await loginDemoRequest(role);
+    if (result.role !== role) {
+      throw new Error('The server returned a different demo role than requested.');
+    }
+    setAccessToken(result.access_token);
+    persist('ca-role', result.role);
+    set({ role, isAuthenticated: true, apiError: null });
+    return role;
   },
   logout: () => {
     setAccessToken(null);

@@ -11,12 +11,14 @@ from sqlalchemy import create_engine
 
 from app.core.config import settings
 from app.core.security import hash_password
+from app.api.routes.auth import DEMO_ROLES
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
 from app.models.department import Department, Hostel
 from app.models.user import User
 from app import models  # noqa: F401
+from app.api.routes.auth import DEMO_ROLES
 
 
 @pytest.fixture
@@ -129,19 +131,26 @@ def test_login_requires_scholar_number_and_valid_password(client: TestClient) ->
     assert email_login.status_code == 401
 
 
-def test_demo_login_is_local_and_development_only(
+@pytest.mark.parametrize("role", DEMO_ROLES)
+def test_demo_login_issues_selected_local_role(client: TestClient, role: str) -> None:
+    response = client.post("/api/auth/demo-login", json={"role": role})
+    assert response.status_code == 200
+    assert response.json()["role"] == role
+    assert response.json()["access_token"]
+
+
+def test_demo_login_is_disabled_outside_local_development(
     client: TestClient,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    demo = client.post("/api/auth/demo-login")
-    assert demo.status_code == 200
-    assert demo.json()["role"] == "Student"
-
-    remote_client = TestClient(app, client=("192.0.2.10", 12345))
-    assert remote_client.post("/api/auth/demo-login").status_code == 404
-
     monkeypatch.setattr(settings, "app_environment", "production")
-    assert client.post("/api/auth/demo-login").status_code == 404
+    response = client.post("/api/auth/demo-login", json={"role": "Super Admin"})
+    assert response.status_code == 404
+
+    monkeypatch.setattr(settings, "app_environment", "development")
+    remote_client = TestClient(app, client=("192.0.2.10", 12345))
+    response = remote_client.post("/api/auth/demo-login", json={"role": "Super Admin"})
+    assert response.status_code == 404
 
 
 def test_issue_workflow_and_role_scoping(client: TestClient) -> None:
