@@ -121,7 +121,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     }
     setAccessToken(result.access_token);
     persist('ca-role', result.role);
-    set({ role, isAuthenticated: true, apiError: null });
+    set({ role, isAuthenticated: true, issues: [], notices: [], audit: [], apiError: null, issuesLoadFailed: false });
     return role;
   },
   logout: () => {

@@ -48,7 +48,7 @@ uvicorn app.main:app --reload
 
 Check `http://127.0.0.1:8000/health`; interactive API documentation is available at `http://127.0.0.1:8000/docs`. The Vite frontend proxies `/api` to this server.
 
-In Vite development mode, the frontend offers a role picker that signs into the real API as a local demo account for Student, Warden, Administrator, Department Staff, or Super Admin. The backend creates each account on first use and returns a normal bearer token, so dashboard data and actions use the configured database. Demo-role sign-in is restricted to `APP_ENVIRONMENT=development` and loopback clients; it is not available in production. PostgreSQL must be running and migrations applied first.
+In Vite development mode, the sign-in page and authenticated top-right dashboard selector offer local demo accounts for Student, Warden, Administrator, Department Staff, or Super Admin. The backend creates each account on first use and returns a normal bearer token, so dashboard data and actions use the configured database. Demo-role sign-in is restricted to `APP_ENVIRONMENT=development` and loopback clients; it is not available in production. PostgreSQL must be running and migrations applied first.
 
 ## Current endpoints
 
