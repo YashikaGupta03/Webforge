@@ -43,4 +43,4 @@ On the backend, set `CORS_ORIGINS` to the exact deployed frontend origin (scheme
 
 ### Vercel frontend and Render backend
 
-In Vercel, set `VITE_API_URL` to the Render service URL followed by `/api` (for example, `https://your-service.onrender.com/api`) under the frontend project's environment variables, then redeploy. In Render, set `CORS_ORIGINS` to the Vercel frontend origin (for example, `https://your-project.vercel.app`, without a trailing path) and redeploy the backend. The root `vercel.json` rewrite sends client-side routes such as `/login` to the app so directly opening or refreshing them does not return Vercel's 404 page.
+In Vercel, set `VITE_API_URL` to the Render service URL followed by `/api` (for example, `https://your-service.onrender.com/api`) under the frontend project's environment variables, then redeploy. In Render, set `CORS_ORIGINS` to the Vercel frontend origin (for example, `https://your-project.vercel.app`, without a trailing path) and redeploy the backend. The root `vercel.json` rewrites `/api/*` to the Render service and sends other client-side routes such as `/login` to the app so direct navigation works.
