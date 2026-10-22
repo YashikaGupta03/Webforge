@@ -69,6 +69,7 @@ export interface AuditRecord {
 }
 
 const AUTH_TOKEN_KEY = 'ca-access-token';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '');
 
 export function getAccessToken(): string | null {
   try {
@@ -89,7 +90,7 @@ export function setAccessToken(token: string | null): void {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getAccessToken();
-  const response = await fetch(`/api${path}`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
